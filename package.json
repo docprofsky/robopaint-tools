@@ -1,0 +1,8 @@
+{
+  "name": "robopaint-tools",
+  "version": "0.0.1",
+  "author": "docprofsky",
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}
