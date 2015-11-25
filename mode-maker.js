@@ -4,21 +4,6 @@ var config = require('../modes/robopaint-mode-template/replace-values.js');
 console.log(config);
 console.log("\n\n");
 
-var testData = {
-  "_meta": {
-    "creator": "docprofsky",
-    "target": "en-US",
-    "release": "0.0.1",
-    "basetype": "mode"
-  },
-  "info": {
-    "name": "name-text",
-    "use": "use-text",
-    "detail": "detail-text"
-  }
-};
-
-
 for (var file in config) {
   console.log(`openining file ${file}`);
   // var fileData = fs.readFileSync(file).toString();
