@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "author": "docprofsky",
   "dependencies": {
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "nodegit": "^0.5.0",
+    "prompt": "^0.2.14"
   }
 }
