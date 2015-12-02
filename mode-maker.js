@@ -19,21 +19,21 @@ const initialPrompt = [
 ];
 
 var newModeInfo = {};
+var modeFolderName = '';
 
 prompt.start();
 
 prompt.addProperties(newModeInfo, initialPrompt, function (err) {
-  console.log(`cloning repo to ${`robopaint-mode-${newModeInfo.name}`}`);
-  Git.Clone("https://github.com/docprofsky/robopaint-mode-template", `robopaint-mode-${newModeInfo.name}`).then(function(repository) {
-    // Work with the repository object here.
+  modeFolderName = `robopaint-mode-${newModeInfo.name}`;
+  console.log(`cloning repo to ${modeFolderName}`);
+  Git.Clone("https://github.com/docprofsky/robopaint-mode-template", modeFolderName).then(function(repository) {
     console.log("Cloned it!");
+    openFiles(0);
+
+    // TODO: Rename files and remove .git folder
   });
 })
 
-
-return;
-
-openFiles(0);
 
 
 function openFiles(i) {
@@ -48,11 +48,11 @@ function openFiles(i) {
   console.log(`openining file ${file}`);
   // CHANGEME: Read and write actual file
 
-  var fileData = fs.readFileSync(`../modes/robopaint-mode-template/${file}`).toString();
+  var fileData = fs.readFileSync(`${modeFolderName}/${file}`).toString();
   doFileConfig(config[file], fileData, 0, function (changedFileData) {
     console.log(`writing file ${file}\n`);
     console.log(`file data:\n${changedFileData}\n\n`);
-    fs.writeFileSync(`../modes/robopaint-mode-template/${file}`, changedFileData);
+    fs.writeFileSync(`${modeFolderName}/${file}`, changedFileData);
     openFiles(i + 1);
   });
 }
