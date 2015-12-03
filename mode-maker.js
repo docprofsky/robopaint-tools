@@ -1,6 +1,7 @@
 var fs = require('fs')
 var prompt = require('prompt');
 var Git = require("nodegit");
+var rimraf = require('rimraf');
 
 
 var config = require('../modes/robopaint-mode-template/replace-values.js');
@@ -8,7 +9,8 @@ var config = require('../modes/robopaint-mode-template/replace-values.js');
 console.log(config);
 console.log("\n\n");
 
-const files = Object.keys(config);
+const files = Object.keys(config.replace);
+console.log(files);
 
 const initialPrompt = [
   {
@@ -28,17 +30,19 @@ prompt.addProperties(newModeInfo, initialPrompt, function (err) {
   console.log(`cloning repo to ${modeFolderName}`);
   Git.Clone("https://github.com/docprofsky/robopaint-mode-template", modeFolderName).then(function(repository) {
     console.log("Cloned it!");
-    openFiles(0);
-
-    // TODO: Rename files and remove .git folder
+    openFiles(0, function () {
+      prepareModeFolder(config.files, modeFolderName, newModeInfo.name, 0, function () {
+        console.log("Done processing.");
+      });
+    });
   });
 })
 
 
 
-function openFiles(i) {
+function openFiles(i, callback) {
   if (i === files.length) {
-    console.log("Done processing.");
+    if(callback) callback();
     return;
   }
 
@@ -49,11 +53,11 @@ function openFiles(i) {
   // CHANGEME: Read and write actual file
 
   var fileData = fs.readFileSync(`${modeFolderName}/${file}`).toString();
-  doFileConfig(config[file], fileData, 0, function (changedFileData) {
+  doFileConfig(config.replace[file], fileData, 0, function (changedFileData) {
     console.log(`writing file ${file}\n`);
     console.log(`file data:\n${changedFileData}\n\n`);
     fs.writeFileSync(`${modeFolderName}/${file}`, changedFileData);
-    openFiles(i + 1);
+    openFiles(i + 1, callback);
   });
 }
 
@@ -86,6 +90,30 @@ function doFileConfig(fileConfig, fileData, i, callback) {
   }
 }
 
+
+function prepareModeFolder(modeFiles, modeDir, modeName, i, callback) {
+  const renameLength = modeFiles.rename.length;
+  if(i === renameLength + modeFiles.delete.length) {
+    if(callback) callback();
+    return;
+  }
+
+  // We are renaming the files
+  if(i < renameLength) {
+    const oldPath = `${modeDir}/${modeFiles.rename[i]}`;
+    const newPath = `${modeDir}/${modeFiles.rename[i].replace('template', modeName)}`;
+    fs.rename(oldPath, newPath, function (err) {
+      if (err) throw err;
+      prepareModeFolder(modeFiles, modeDir, modeName, i + 1, callback);
+    });
+  } else {
+    const deletePath = `${modeDir}/${modeFiles.delete[i - renameLength]}`;
+    rimraf(deletePath, function (err) {
+      if (err) throw err;
+      prepareModeFolder(modeFiles, modeDir, modeName, i + 1, callback);
+    });
+  }
+}
 
 function changeFileData(fileData, query, replacement, callback) {
   // We are using RegEx to match the field

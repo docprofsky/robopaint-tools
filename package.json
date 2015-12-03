@@ -5,6 +5,7 @@
   "dependencies": {
     "commander": "^2.9.0",
     "nodegit": "^0.5.0",
-    "prompt": "^0.2.14"
+    "prompt": "^0.2.14",
+    "rimraf": "^2.4.4"
   }
 }
