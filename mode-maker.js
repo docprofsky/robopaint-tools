@@ -6,11 +6,8 @@ var rimraf = require('rimraf');
 
 var config = require('../modes/robopaint-mode-template/replace-values.js');
 
-console.log(config);
-console.log("\n\n");
 
 const files = Object.keys(config.replace);
-console.log(files);
 
 const initialPrompt = [
   {
@@ -49,13 +46,8 @@ function openFiles(i, callback) {
   // The file we are working with
   const file = files[i];
 
-  console.log(`openining file ${file}`);
-  // CHANGEME: Read and write actual file
-
   var fileData = fs.readFileSync(`${modeFolderName}/${file}`).toString();
   doFileConfig(config.replace[file], fileData, 0, function (changedFileData) {
-    console.log(`writing file ${file}\n`);
-    console.log(`file data:\n${changedFileData}\n\n`);
     fs.writeFileSync(`${modeFolderName}/${file}`, changedFileData);
     openFiles(i + 1, callback);
   });
