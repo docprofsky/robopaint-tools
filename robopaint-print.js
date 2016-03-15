@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Use this program to send a SVG to RoboPaint using the remote printing API
 
 var http = require('http');
