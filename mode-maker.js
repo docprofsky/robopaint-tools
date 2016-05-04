@@ -5,10 +5,8 @@ var Git = require("nodegit");
 var rimraf = require('rimraf');
 
 
-var config = require('../modes/robopaint-mode-template/replace-values.js');
+var config, files;
 
-
-const files = Object.keys(config.replace);
 
 const initialPrompt = [
   {
@@ -28,6 +26,10 @@ prompt.addProperties(newModeInfo, initialPrompt, function (err) {
   console.log(`cloning repo to ${modeFolderName}`);
   Git.Clone("https://github.com/docprofsky/robopaint-mode-template", modeFolderName).then(function(repository) {
     console.log("Cloned it!");
+
+    config = require(`./${modeFolderName}/replace-values.js`);
+    files = Object.keys(config.replace);
+
     openFiles(0, function () {
       prepareModeFolder(config.files, modeFolderName, newModeInfo.name, 0, function () {
         console.log("Done processing.");
