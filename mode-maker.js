@@ -11,7 +11,7 @@ var config, files;
 const initialPrompt = [
   {
     name: 'name',
-    description: 'Name for mode, this must not have spaces. It will be used to name the mode folder',
+    description: 'Name for mode, this must not have spaces. It will be used to name the mode folder\nDo not preface with robopaint-mode',
     required: true
   }
 ];
